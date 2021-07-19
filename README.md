@@ -8,7 +8,7 @@ The goal of this task was to convert docker-compose.yaml to kubernetes manifests
 
 This proves to be useful when learning about core concepts of kubernetes like: pods, replica sets/controllers, deployments, stateful sets, services, volumes, config maps, etc.
 
-### How to start?
+### Where to start?
 
 Kubernetes documentation is a great way to start: https://kubernetes.io/docs/home/
 
