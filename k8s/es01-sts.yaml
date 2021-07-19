@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: es01
+spec:
+  selector:
+    matchLabels:
+      app: es01
+  serviceName: es01
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: es01
+    spec:
+      containers:
+        - env:
+            - name: bootstrap.memory_lock
+              value: "false"
+            - name: cluster.initial_master_nodes
+              value: es01,es02
+            - name: cluster.name
+              value: docker-cluster
+            - name: discovery.seed_hosts
+              value: es02
+            - name: node.name
+              value: es01
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+          name: es01
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
+          ports:
+            - containerPort: 9200
+          volumeMounts:
+          - name: es01-pvc
+            mountPath: /usr/share/elasticsearch/data
+      initContainers:
+        - name: file-ownership
+          image: busybox
+          command: ['sh', '-c', 'chown -R 1000:1000 /usr/share/elasticsearch/data']
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: es01-pvc
+              mountPath: /usr/share/elasticsearch/data
+        - name: increase-virtual-memory
+          image: busybox
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
+        - name: fd-limit
+          image: busybox
+          command: ["sh", "-c", "ulimit -u 65536"]
+          securityContext:
+            privileged: true
+  volumeClaimTemplates:
+    - metadata:
+        name: es01-pvc
+        labels:
+          app: es01
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

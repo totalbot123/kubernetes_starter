@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-server
+  template:
+    metadata:
+      labels:
+        app: web-server
+    spec:
+      containers:
+        - args: ["interactive", "ingress"]
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              valueFrom:
+                configMapKeyRef: 
+                  name: cluster-config
+                  key: elasticsearch_hosts
+            - name: KUBERNETES_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef: 
+                  name: cluster-config
+                  key: kubernetes_service_host
+            - name: KUBERNETES_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef: 
+                  name: cluster-config
+                  key: kubernetes_service_port
+            - name: REDIS_MASTER_HOST
+              valueFrom:
+                configMapKeyRef: 
+                  name: cluster-config
+                  key: redis_master_host
+            - name: REDIS_SLAVE_HOST
+              valueFrom:
+                configMapKeyRef: 
+                  name: cluster-config
+                  key: redis_slave_host
+          image: quay.io/myafk/interactive:stable
+          name: web-server
+          ports:
+            - containerPort: 8085
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      restartPolicy: Always

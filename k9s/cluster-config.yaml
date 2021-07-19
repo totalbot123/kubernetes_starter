@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+data:
+  elasticsearch_hosts: http://es01:9200
+  kubernetes_service_host: any string here
+  kubernetes_service_port: any thing here
+  redis_master_host: redis-master
+  redis_slave_host: redis-slave

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      hostname: kibana
+      containers:
+        - env:
+          - name: ELASTICSEARCH_HOSTS
+            valueFrom:
+              configMapKeyRef: 
+                name: cluster-config
+                key: elasticsearch_hosts
+          image: docker.elastic.co/kibana/kibana:7.1.1
+          name: kibana
+          ports:
+            - containerPort: 5601
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      restartPolicy: Always

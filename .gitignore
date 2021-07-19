@@ -1,0 +1,11 @@
+linode/variables.tf
+.ssh/linode
+.ssh/linode.pub
+linode/terraform.tfstate.backup
+linode/terraform.tfstate
+linode/.terraform/modules/modules.json
+linode/.terraform/plugins/darwin_amd64/CHANGELOG.md
+linode/.terraform/plugins/darwin_amd64/LICENSE
+linode/.terraform/plugins/darwin_amd64/lock.json
+linode/.terraform/plugins/darwin_amd64/README.md
+linode/.terraform/plugins/darwin_amd64/terraform-provider-linode_v1.17.0
